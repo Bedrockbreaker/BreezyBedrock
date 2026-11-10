@@ -1,0 +1,13 @@
+[Icon Theme]
+Name=BreezyBedrock
+Comment=Personal Breeze icon extensions
+Inherits=breeze-dark,hicolor
+FollowsColorScheme=true
+Directories=scalable/mimetypes
+
+[scalable/mimetypes]
+Size=48
+Type=Scalable
+MinSize=16
+MaxSize=512
+Context=MimeTypes
