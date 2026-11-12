@@ -74,14 +74,30 @@ def remove_managed_entries(node):
         if inside:
             node.remove(child)
 
+def build_element(parent, definition):
+    element_name, attributes, text, *rest = definition
+    children = rest[0] if rest else []
+
+    element = ET.SubElement(
+        parent,
+        tag(element_name),
+        attributes
+    )
+
+    if text is not None:
+        element.text = text
+
+    for child in children:
+        build_element(element, child)
+
+    return element
+
+
 def add_managed_entries(node, entries):
     node.append(ET.Comment(BEGIN))
 
-    for element, attributes, text in entries:
-        child = ET.SubElement(node, tag(element), attributes)
-
-        if text:
-            child.text = text
+    for definition in entries:
+        build_element(node, definition)
 
     node.append(ET.Comment(END))
 
@@ -92,20 +108,102 @@ definitions = {
 
     "text/x-typescript": [
         ("comment", {}, "TypeScript source code"),
-        ("glob", {"pattern": "*.ts", "weight": "90"}, None),
-        ("glob", {"pattern": "*.tsx", "weight": "90"}, None),
+        ("glob", {"pattern": "*.ts"}, None),
+        ("glob", {"pattern": "*.tsx"}, None),
         ("icon", {"name": "text-x-typescript"}, None),
     ],
 
     "text/x-astro": [
         ("comment", {}, "Astro component"),
-        ("glob", {"pattern": "*.astro", "weight": "90"}, None),
+        ("glob", {"pattern": "*.astro"}, None),
         ("icon", {"name": "text-x-astro"}, None),
     ],
 
 	"text/markdown": [
-		("glob", {"pattern": "*.mdx", "weight": "90"}, None),
+		("glob", {"pattern": "*.mdx"}, None),
 	],
+
+    "application/x-unity-scene": [
+        ("comment", {}, "Unity Engine Scene"),
+        ("glob", {"pattern": "*.unity"}, None),
+        ("icon", {"name": "application-x-unity-scene"}, None),
+    ],
+
+    "application/x-unity-prefab": [
+        ("comment", {}, "Unity Engine Prefab"),
+        ("glob", {"pattern": "*.prefab"}, None),
+        ("icon", {"name": "application-x-unity-prefab"}, None),
+    ],
+
+    "application/x-unity-asset": [
+        ("comment", {}, "Unity Engine Asset"),
+        ("glob", {"pattern": "*.anim"}, None),
+        ("glob", {"pattern": "*.asmdef"}, None),
+        ("glob", {"pattern": "*.asmref"}, None),
+        ("glob", {"pattern": "*.asset"}, None),
+        ("glob", {"pattern": "*.blendtree"}, None),
+        ("glob", {"pattern": "*.brush"}, None),
+        ("glob", {"pattern": "*.buildreport"}, None),
+        ("glob", {"pattern": "*.cginc"}, None),
+        ("glob", {"pattern": "*.colors"}, None),
+        ("glob", {"pattern": "*.compute"}, None),
+        ("glob", {"pattern": "*.controller"}, None),
+        ("glob", {"pattern": "*.cubemap"}, None),
+        ("glob", {"pattern": "*.curves"}, None),
+        ("glob", {"pattern": "*.curvesNormalized"}, None),
+        ("glob", {"pattern": "*.flare"}, None),
+        ("glob", {"pattern": "*.fontsettings"}, None),
+        ("glob", {"pattern": "*.giparams"}, None),
+        ("glob", {"pattern": "*.gradients"}, None),
+        ("glob", {"pattern": "*.guiskin"}, None),
+        ("glob", {"pattern": "*.ht"}, None),
+        ("glob", {"pattern": "*.inputactions"}, None),
+        ("glob", {"pattern": "*.jslib"}, None),
+        ("glob", {"pattern": "*.jspre"}, None),
+        ("glob", {"pattern": "*.mask"}, None),
+        ("glob", {"pattern": "*.mat"}, None),
+        ("glob", {"pattern": "*.mesh"}, None),
+        ("glob", {"pattern": "*.mixer"}, None),
+        ("glob", {"pattern": "*.overrideController"}, None),
+        ("glob", {"pattern": "*.particleCurves"}, None),
+        ("glob", {"pattern": "*.particleCurvesSigned"}, None),
+        ("glob", {"pattern": "*.particleDoubleCurves"}, None),
+        ("glob", {"pattern": "*.particleDoubleCurvesSigned"}, None),
+        ("glob", {"pattern": "*.physicMaterial"}, None),
+        ("glob", {"pattern": "*.physicsMaterial2D"}, None),
+        ("glob", {"pattern": "*.playable"}, None),
+        ("glob", {"pattern": "*.preset"}, None),
+        ("glob", {"pattern": "*.raytrace"}, None),
+        ("glob", {"pattern": "*.renderTexture"}, None),
+        ("glob", {"pattern": "*.rsp"}, None),
+        ("glob", {"pattern": "*.shader"}, None),
+        ("glob", {"pattern": "*.shadergraph"}, None),
+        ("glob", {"pattern": "*.shadersubgraph"}, None),
+        ("glob", {"pattern": "*.shadervariants"}, None),
+        ("glob", {"pattern": "*.signal"}, None),
+        ("glob", {"pattern": "*.spriteatlas"}, None),
+        ("glob", {"pattern": "*.state"}, None),
+        ("glob", {"pattern": "*.statemachine"}, None),
+        ("glob", {"pattern": "*.terrainlayer"}, None),
+        ("glob", {"pattern": "*.texture2D"}, None),
+        ("glob", {"pattern": "*.transition"}, None),
+        ("glob", {"pattern": "*.uss"}, None),
+        ("glob", {"pattern": "*.uxml"}, None),
+        ("glob", {"pattern": "*.vfx"}, None),
+        ("glob", {"pattern": "*.vfxblock"}, None),
+        ("glob", {"pattern": "*.vfxoperator"}, None),
+        ("glob", {"pattern": "*.webCamTexture"}, None),
+        ("icon", {"name": "application-x-unity-asset"}, None),
+    ],
+
+    "application/x-unity-meta": [
+        ("comment", {}, "Unity Engine Asset Metadata"),
+        ("magic", {}, None, [
+            ("match", {"type": "string", "offset": "0", "value": "fileFormatVersion: 2"}, None),
+            ("match", {"type": "string", "offset": "0", "value": "fileFormatVersion: 3"}, None),
+        ]),
+        ("icon", {"name": "application-x-unity-meta"}, None),
+    ]
 }
 
 if override_file.exists():
